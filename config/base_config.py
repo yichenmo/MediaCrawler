@@ -1,147 +1,149 @@
-# 基础配置
-PLATFORM = "xhs"
-KEYWORDS = "编程副业,编程兼职"
+# -*- coding: utf-8 -*-
+# Copyright (c) 2025 relakkes@gmail.com
+#
+# This file is part of MediaCrawler project.
+# Repository: https://github.com/NanmiCoder/MediaCrawler/blob/main/config/base_config.py
+# GitHub: https://github.com/NanmiCoder
+# Licensed under NON-COMMERCIAL LEARNING LICENSE 1.1
+#
+
+# 声明：本代码仅供学习和研究目的使用。使用者应遵守以下原则：
+# 1. 不得用于任何商业用途。
+# 2. 使用时应遵守目标平台的使用条款和robots.txt规则。
+# 3. 不得进行大规模爬取或对平台造成运营干扰。
+# 4. 应合理控制请求频率，避免给目标平台带来不必要的负担。
+# 5. 不得用于任何非法或不当的用途。
+#
+# 详细许可条款请参阅项目根目录下的LICENSE文件。
+# 使用本代码即表示您同意遵守上述原则和LICENSE中的所有条款。
+
+# Basic configuration
+PLATFORM = "xhs"  # Platform, xhs | dy | ks | bili | wb | tieba | zhihu
+
+# 是否使用海外版小红书 (rednote.com)
+# 开启后 API 走 webapi.rednote.com，cookie 域使用 .rednote.com
+XHS_INTERNATIONAL = False
+
+KEYWORDS = "编程副业,编程兼职"  # Keyword search configuration, separated by English commas
 LOGIN_TYPE = "qrcode"  # qrcode or phone or cookie
 COOKIES = ""
-# 具体值参见media_platform.xxx.field下的枚举值，暂时只支持小红书
-SORT_TYPE = "popularity_descending"
-# 具体值参见media_platform.xxx.field下的枚举值，暂时只支持抖音
-PUBLISH_TIME_TYPE = 0
-CRAWLER_TYPE = "search"  # 爬取类型，search(关键词搜索) | detail(帖子详情)| creator(创作者主页数据)
-
-# 是否开启 IP 代理
+CRAWLER_TYPE = (
+    "search"  # Crawling type, search (keyword search) | detail (post details) | creator (creator homepage data)
+)
+# Whether to enable IP proxy
 ENABLE_IP_PROXY = False
 
-# 代理IP池数量
+# Number of proxy IP pools
 IP_PROXY_POOL_COUNT = 2
 
-# 代理IP提供商名称
-IP_PROXY_PROVIDER_NAME = "kuaidaili"
+# Proxy IP provider name
+IP_PROXY_PROVIDER_NAME = "kuaidaili"  # kuaidaili | wandouhttp | static
 
-# 设置为True不会打开浏览器（无头浏览器）
-# 设置False会打开一个浏览器
-# 小红书如果一直扫码登录不通过，打开浏览器手动过一下滑动验证码
-# 抖音如果一直提示失败，打开浏览器看下是否扫码登录之后出现了手机号验证，如果出现了手动过一下再试。
+# Static proxy configuration (used when IP_PROXY_PROVIDER_NAME is set to "static")
+# Format: "http://your_home_domain:port" or "http://user:password@your_home_domain:port"
+STATIC_PROXY_URL = ""
+
+# Setting to True will not open the browser (headless browser)
+# Setting False will open a browser
+# If Xiaohongshu keeps scanning the code to log in but fails, open the browser and manually pass the sliding verification code.
+# If Douyin keeps prompting failure, open the browser and see if mobile phone number verification appears after scanning the QR code to log in. If it does, manually go through it and try again.
 HEADLESS = False
 
-# 是否保存登录状态
+# Whether to save login status
 SAVE_LOGIN_STATE = True
 
-# 数据保存类型选项配置,支持三种类型：csv、db、json, 最好保存到DB，有排重的功能。
-SAVE_DATA_OPTION = "json"  # csv or db or json
+# ==================== CDP (Chrome DevTools Protocol) 配置 ====================
+# 是否启用 CDP 模式 - 使用用户本地的 Chrome/Edge 浏览器进行爬取，具有更好的反检测能力
+# 开启后，会自动检测并启动用户的 Chrome/Edge 浏览器，通过 CDP 协议进行控制
+# 该方式使用真实浏览器环境，包括用户的扩展、Cookie 和设置，大幅降低被风控检测的风险
+ENABLE_CDP_MODE = True
 
-# 用户浏览器缓存的浏览器文件配置
+# CDP 调试端口，用于与浏览器通信
+# 如果端口被占用，系统会自动尝试下一个可用端口
+CDP_DEBUG_PORT = 9222
+
+# 自定义浏览器路径（可选）
+# 如果为空，系统会自动检测 Chrome/Edge 的安装路径
+# Windows 示例: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+# macOS 示例: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CUSTOM_BROWSER_PATH = ""
+
+# 是否在 CDP 模式下启用无头模式
+# 注意：即使设置为 True，某些反检测功能在无头模式下可能无法正常工作
+CDP_HEADLESS = False
+
+# 浏览器启动超时时间（秒）
+BROWSER_LAUNCH_TIMEOUT = 60
+
+# 是否连接用户已打开的浏览器，而不是启动新的浏览器
+# 开启后，程序会连接一个已经启用了远程调试的浏览器
+# 用户需要在 Chrome 中开启远程调试：chrome://inspect/#remote-debugging
+# 或者使用命令行参数启动 Chrome：--remote-debugging-port=9222
+# 这种方式反检测效果最好，因为直接使用用户真实浏览器的所有 Cookie、扩展和浏览历史
+CDP_CONNECT_EXISTING = True
+
+# 程序结束时是否自动关闭浏览器
+# 设置为 False 可以保持浏览器运行，方便调试
+AUTO_CLOSE_BROWSER = True
+
+# Data saving type option configuration, supports: csv, db, json, jsonl, sqlite, excel, postgres. It is best to save to DB, with deduplication function.
+SAVE_DATA_OPTION = "jsonl"  # csv or db or json or jsonl or sqlite or excel or postgres
+
+# Data saving path, if not specified by default, it will be saved to the data folder.
+SAVE_DATA_PATH = ""
+
+# Browser file configuration cached by the user's browser
 USER_DATA_DIR = "%s_user_data_dir"  # %s will be replaced by platform name
 
-# 爬取开始页数 默认从第一页开始
+# The number of pages to start crawling starts from the first page by default
 START_PAGE = 1
 
-# 爬取视频/帖子的数量控制
-CRAWLER_MAX_NOTES_COUNT = 100
+# Control the number of crawled videos/posts
+CRAWLER_MAX_NOTES_COUNT = 15
 
-# 并发爬虫数量控制
+# Controlling the number of concurrent crawlers
 MAX_CONCURRENCY_NUM = 1
 
-# 是否开启爬图片模式, 默认不开启爬图片
-ENABLE_GET_IMAGES = False
+# Whether to enable crawling media mode (including image or video resources), crawling media is not enabled by default
+ENABLE_GET_MEIDAS = False
 
-# 是否开启爬评论模式, 默认不开启爬评论
-ENABLE_GET_COMMENTS = False
+# Whether to enable comment crawling mode. Comment crawling is enabled by default.
+ENABLE_GET_COMMENTS = True
 
-# 是否开启爬二级评论模式, 默认不开启爬二级评论
-# 老版本项目使用了 db, 则需参考 schema/tables.sql line 287 增加表字段
+# Control the number of crawled first-level comments (single video/post)
+CRAWLER_MAX_COMMENTS_COUNT_SINGLENOTES = 10
+
+# Whether to enable the mode of crawling second-level comments. By default, crawling of second-level comments is not enabled.
+# If the old version of the project uses db, you need to refer to schema/tables.sql line 287 to add table fields.
 ENABLE_GET_SUB_COMMENTS = False
 
-# 指定小红书需要爬虫的笔记ID列表
-XHS_SPECIFIED_ID_LIST = [
-    "6422c2750000000027000d88",
-    # ........................
-]
-
-# 指定抖音需要爬取的ID列表
-DY_SPECIFIED_ID_LIST = [
-    "7280854932641664319",
-    "7202432992642387233"
-    # ........................
-]
-
-# 指定快手平台需要爬取的ID列表
-KS_SPECIFIED_ID_LIST = [
-    "3xf8enb8dbj6uig",
-    "3x6zz972bchmvqe"
-]
-
-# 指定B站平台需要爬取的视频bvid列表
-BILI_SPECIFIED_ID_LIST = [
-    "BV1d54y1g7db",
-    "BV1Sz4y1U77N",
-    "BV14Q4y1n7jz",
-    # ........................
-]
-
-# 指定微博平台需要爬取的帖子列表
-WEIBO_SPECIFIED_ID_LIST = [
-    "4982041758140155",
-    # ........................
-]
-
-# 指定weibo创作者ID列表
-WEIBO_CREATOR_ID_LIST = [
-    "5533390220",
-    # ........................
-]
-
-# 指定贴吧需要爬取的帖子列表
-TIEBA_SPECIFIED_ID_LIST = [
-
-]
-
-# 指定贴吧名称列表，爬取该贴吧下的帖子
-TIEBA_NAME_LIST = [
-    # "盗墓笔记"
-]
-
-TIEBA_CREATOR_URL_LIST = [
-    "https://tieba.baidu.com/home/main/?id=tb.1.7f139e2e.6CyEwxu3VJruH_-QqpCi6g&fr=frs",
-    # ........................
-]
-
-# 指定小红书创作者ID列表
-XHS_CREATOR_ID_LIST = [
-    "63e36c9a000000002703502b",
-    # ........................
-]
-
-# 指定Dy创作者ID列表(sec_id)
-DY_CREATOR_ID_LIST = [
-    "MS4wLjABAAAATJPY7LAlaa5X-c8uNdWkvz0jUGgpw4eeXIwu_8BhvqE",
-    # ........................
-]
-
-# 指定bili创作者ID列表(sec_id)
-BILI_CREATOR_ID_LIST = [
-    "20813884",
-    # ........................
-]
-
-# 指定快手创作者ID列表
-KS_CREATOR_ID_LIST = [
-    "3x4sm73aye7jq7i",
-    # ........................
-]
-
-# 词云相关
-# 是否开启生成评论词云图
+# word cloud related
+# Whether to enable generating comment word clouds
 ENABLE_GET_WORDCLOUD = False
-# 自定义词语及其分组
-# 添加规则：xx:yy 其中xx为自定义添加的词组，yy为将xx该词组分到的组名。
+# Custom words and their groups
+# Add rule: xx:yy where xx is a custom-added phrase, and yy is the group name to which the phrase xx is assigned.
 CUSTOM_WORDS = {
-    '零几': '年份',  # 将“零几”识别为一个整体
-    '高频词': '专业术语'  # 示例自定义词
+    "零几": "年份",  # Recognize "zero points" as a whole
+    "高频词": "专业术语",  # Example custom words
 }
 
-# 停用(禁用)词文件路径
+# Deactivate (disabled) word file path
 STOP_WORDS_FILE = "./docs/hit_stopwords.txt"
 
-# 中文字体文件路径
+# Chinese font file path
 FONT_PATH = "./docs/STZHONGS.TTF"
+
+# Crawl interval
+CRAWLER_MAX_SLEEP_SEC = 2
+
+# 是否禁用 SSL 证书验证。仅在使用企业代理、Burp Suite、mitmproxy 等会注入自签名证书的中间人代理时设为 True。
+# 警告：禁用 SSL 验证将使所有流量暴露于中间人攻击风险，请勿在生产环境中开启。
+DISABLE_SSL_VERIFY = False
+
+from .bilibili_config import *
+from .xhs_config import *
+from .dy_config import *
+from .ks_config import *
+from .weibo_config import *
+from .tieba_config import *
+from .zhihu_config import *

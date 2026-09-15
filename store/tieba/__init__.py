@@ -1,18 +1,42 @@
 # -*- coding: utf-8 -*-
+# Copyright (c) 2025 relakkes@gmail.com
+#
+# This file is part of MediaCrawler project.
+# Repository: https://github.com/NanmiCoder/MediaCrawler/blob/main/store/tieba/__init__.py
+# GitHub: https://github.com/NanmiCoder
+# Licensed under NON-COMMERCIAL LEARNING LICENSE 1.1
+#
+
+# 声明：本代码仅供学习和研究目的使用。使用者应遵守以下原则：
+# 1. 不得用于任何商业用途。
+# 2. 使用时应遵守目标平台的使用条款和robots.txt规则。
+# 3. 不得进行大规模爬取或对平台造成运营干扰。
+# 4. 应合理控制请求频率，避免给目标平台带来不必要的负担。
+# 5. 不得用于任何非法或不当的用途。
+#
+# 详细许可条款请参阅项目根目录下的LICENSE文件。
+# 使用本代码即表示您同意遵守上述原则和LICENSE中的所有条款。
+
+
+# -*- coding: utf-8 -*-
 from typing import List
 
 from model.m_baidu_tieba import TiebaComment, TiebaCreator, TiebaNote
 from var import source_keyword_var
 
-from . import tieba_store_impl
-from .tieba_store_impl import *
+from ._store_impl import *
 
 
 class TieBaStoreFactory:
     STORES = {
         "csv": TieBaCsvStoreImplement,
         "db": TieBaDbStoreImplement,
-        "json": TieBaJsonStoreImplement
+        "postgres": TieBaDbStoreImplement,
+        "json": TieBaJsonStoreImplement,
+        "jsonl": TieBaJsonlStoreImplement,
+        "sqlite": TieBaSqliteStoreImplement,
+        "mongodb": TieBaMongoStoreImplement,
+        "excel": TieBaExcelStoreImplement,
     }
 
     @staticmethod
@@ -20,7 +44,7 @@ class TieBaStoreFactory:
         store_class = TieBaStoreFactory.STORES.get(config.SAVE_DATA_OPTION)
         if not store_class:
             raise ValueError(
-                "[TieBaStoreFactory.create_store] Invalid save option only supported csv or db or json ...")
+                "[TieBaStoreFactory.create_store] Invalid save option only supported csv or db or json or sqlite or mongodb or excel ...")
         return store_class()
 
 
@@ -97,7 +121,5 @@ async def save_creator(user_info: TiebaCreator):
     Returns:
 
     """
-    local_db_item = user_info.model_dump()
-    local_db_item["last_modify_ts"] = utils.get_current_timestamp()
-    utils.logger.info(f"[store.tieba.save_creator] creator:{local_db_item}")
-    await TieBaStoreFactory.create_store().store_creator(local_db_item)
+    # 教学版：创作者个人资料不再落库，防骚扰。
+    return
